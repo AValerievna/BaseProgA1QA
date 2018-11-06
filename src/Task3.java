@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 class Task3 {
     private static final int defNum = 10;
+    private static final String regexp1 = "\\.([^.]+)$";
+    private static final String regexp2 = "_res.$1";
 
     static void task3() {
         Scanner in = new Scanner(System.in);
@@ -40,15 +42,20 @@ class Task3 {
     private static String selectCases(String str, int num) {
         Path path = Paths.get(str);
         File sourceFile = new File(str);
-        String resStr = str.replaceAll("\\.([^\\.]+)$", "_res.$1");
+        String resStr = str.replaceAll(regexp1, regexp2);
         File resFile = new File(resStr);
-        FileWriter fr1 = null;
-        FileWriter fr2 = null;
-
+        List<String> allLines = null;
         try {
+            allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            List<String> allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
-            int linesCount = allLines.size();
+        try (FileWriter fr1 = new FileWriter(sourceFile); FileWriter fr2 = new FileWriter(resFile)) {
+            int linesCount = 0;
+            if (allLines != null) {
+                linesCount = allLines.size();
+            }
             int numLimit;
             if (linesCount>num) {
                 numLimit=num;
@@ -57,34 +64,23 @@ class Task3 {
             }
             Set<Integer> linesToRemove = new Random().ints(1, linesCount).distinct().limit(numLimit).boxed().collect(Collectors.toSet());
 
-            fr1 = new FileWriter(sourceFile);
-            fr2 = new FileWriter(resFile);
+            if (allLines != null) {
+                fr1.write(allLines.get(0)+"\n");
+                fr2.write(allLines.get(0)+"\n");
+                for(int i=1;i<linesCount;i++) {
 
-            fr1.write(allLines.get(0)+"\n");
-            fr2.write(allLines.get(0)+"\n");
-            for(int i=1;i<linesCount;i++) {
-
-                if(linesToRemove.contains(i)) {
-                    fr2.write(allLines.get(i)+"\n");
-                } else {
-                    fr1.write(allLines.get(i)+"\n");
+                    if(linesToRemove.contains(i)) {
+                        fr2.write(allLines.get(i)+"\n");
+                    } else {
+                        fr1.write(allLines.get(i)+"\n");
+                    }
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (fr1 != null) {
-                    fr1.close();
-                }
-                if (fr2 != null) {
-                    fr2.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-       return str;
+       return resStr;
     }
 
     private static String selectCases(String path) {
