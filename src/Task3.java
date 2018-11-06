@@ -40,7 +40,7 @@ class Task3 {
     private static String selectCases(String str, int num) {
         Path path = Paths.get(str);
         File sourceFile = new File(str);
-        String resStr =str.replaceAll("\\.","_res.");
+        String resStr = str.replaceAll("\\.([^\\.]+)$", "_res.$1");
         File resFile = new File(resStr);
         FileWriter fr1 = null;
         FileWriter fr2 = null;
