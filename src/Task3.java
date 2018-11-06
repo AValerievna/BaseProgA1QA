@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 class Task3 {
+    private static final int defNum = 10;
+
     static void task3() {
         Scanner in = new Scanner(System.in);
         System.out.println("Input a file path:");
@@ -72,8 +74,12 @@ class Task3 {
             e.printStackTrace();
         } finally {
             try {
-                fr1.close();
-                fr2.close();
+                if (fr1 != null) {
+                    fr1.close();
+                }
+                if (fr2 != null) {
+                    fr2.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -82,6 +88,6 @@ class Task3 {
     }
 
     private static String selectCases(String path) {
-        return selectCases(path,10);
+        return selectCases(path,defNum);
     }
 }

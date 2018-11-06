@@ -3,12 +3,15 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 class Task1 {
+    private static final int secDiff = 10000;
+    private static final String strDateFormat = "dd/MM/yyyy HH:mm:ss";
 
     private static class ExtFilenameFilter implements FilenameFilter {
 
@@ -44,29 +47,34 @@ class Task1 {
         long cur = date.getTime();
         long min = cur;
 
-        if (listFiles.length == 0) {
-            System.out.println("There is no files with the extension " + ext + " in directory " + path);
-        } else {
-            BasicFileAttributes attr;
-            for (File f : listFiles) {
-                try {
-                    attr = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
-                    filesMap.put(f.toString(), attr.creationTime().toMillis());
-                    long diff = cur - attr.creationTime().toMillis();
-                    if (diff < min) {
-                        min = diff;
+        if (listFiles != null) {
+            if (listFiles.length == 0) {
+                System.out.println("There is no files with the extension " + ext + " in directory " + path);
+            } else {
+                BasicFileAttributes attr;
+                for (File f : listFiles) {
+                    try {
+                        attr = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
+                        filesMap.put(f.toString(), attr.creationTime().toMillis());
+                        long diff = cur - attr.creationTime().toMillis();
+                        if (diff < min) {
+                            min = diff;
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Exception handled when trying to get file " + f + " attributes: ");
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    System.out.println("Exception handled when trying to get file " + f + " attributes: ");
-                    e.printStackTrace();
                 }
-            }
-            for (Map.Entry<String, Long> entry : filesMap.entrySet()) {
-                if (cur - entry.getValue() <= min + 10) {
-                    System.out.println("File: " + entry.getKey());
+                for (Map.Entry<String, Long> entry : filesMap.entrySet()) {
+                    long time = entry.getValue();
+                    if (cur - time <= min + secDiff) {
+                        System.out.println("File: " + entry.getKey()
+                        +"; creation time: "
+                        +new SimpleDateFormat(strDateFormat).format(time));
+                    }
                 }
-            }
 
+            }
         }
 
     }
