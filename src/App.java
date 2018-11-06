@@ -33,12 +33,11 @@ public class App {
                             continue;
                     }
                     break;
-                case 3:
+                case 3: Task3.task3();
                     break;
                 case 4:
                     System.exit(0);
                 default: System.out.println("Please, choose the number from the list");
-                    continue;
             }
         }
     }
