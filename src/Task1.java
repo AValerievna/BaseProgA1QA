@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 class Task1 {
-    private static final int secDiff = 10000;
-    private static final String strDateFormat = "dd/MM/yyyy HH:mm:ss";
+    private static final int SEC_DIFF = 10000;
+    private static final String STR_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
 
     private static class ExtFilenameFilter implements FilenameFilter {
 
@@ -27,7 +27,7 @@ class Task1 {
         }
     }
 
-    static void task1() {
+    static void findTheMostFreshFilesWithExtension() {
 
 
         Scanner in = new Scanner(System.in);
@@ -51,31 +51,42 @@ class Task1 {
             if (listFiles.length == 0) {
                 System.out.println("There is no files with the extension " + ext + " in directory " + path);
             } else {
-                BasicFileAttributes attr;
-                for (File f : listFiles) {
-                    try {
-                        attr = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
-                        filesMap.put(f.toString(), attr.creationTime().toMillis());
-                        long diff = cur - attr.creationTime().toMillis();
-                        if (diff < min) {
-                            min = diff;
-                        }
-                    } catch (IOException e) {
-                        System.out.println("Exception handled when trying to get file " + f + " attributes: ");
-                        e.printStackTrace();
-                    }
-                }
-                for (Map.Entry<String, Long> entry : filesMap.entrySet()) {
-                    long time = entry.getValue();
-                    if (cur - time <= min + secDiff) {
-                        System.out.println("File: " + entry.getKey()
-                        +"; creation time: "
-                        +new SimpleDateFormat(strDateFormat).format(time));
-                    }
-                }
+                min = getMinAndFilesMap(listFiles, filesMap, cur, min);
+                outputTheMostFreshFiles(filesMap, cur, min);
 
             }
+        } else {
+            System.out.println("Files list is unexpectedly null");
         }
 
+    }
+
+    private static void outputTheMostFreshFiles(Map<String, Long> filesMap, long cur, long min) {
+        for (Map.Entry<String, Long> entry : filesMap.entrySet()) {
+            long time = entry.getValue();
+            if (cur - time <= min + SEC_DIFF) {
+                System.out.println("File: " + entry.getKey()
+                +"; creation time: "
+                +new SimpleDateFormat(STR_DATE_FORMAT).format(time));
+            }
+        }
+    }
+
+    private static long getMinAndFilesMap(File[] listFiles, Map<String, Long> filesMap, long cur, long min) {
+        BasicFileAttributes attr;
+        for (File f : listFiles) {
+            try {
+                attr = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
+                filesMap.put(f.toString(), attr.creationTime().toMillis());
+                long diff = cur - attr.creationTime().toMillis();
+                if (diff < min) {
+                    min = diff;
+                }
+            } catch (IOException e) {
+                System.out.println("Exception handled when trying to get file " + f + " attributes: ");
+                e.printStackTrace();
+            }
+        }
+        return min;
     }
 }
