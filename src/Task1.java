@@ -7,13 +7,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 class Task1 {
     private static final int SEC_DIFF = 10000;
     private static final String STR_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    private String path;
+    private String ext;
+    private File dir;
 
-    private static class ExtFilenameFilter implements FilenameFilter {
+    public Task1(String path, String ext) {
+        this.path = path;
+        dir = new File(path);
+        if (!dir.exists()) {
+            System.out.println("This directory does not exist: " + path);
+            return;
+        }
+        this.ext = ext;
+    }
+
+    private class ExtFilenameFilter implements FilenameFilter {
 
         private String ext;
 
@@ -27,19 +39,7 @@ class Task1 {
         }
     }
 
-    static void findTheMostFreshFilesWithExtension() {
-
-
-        Scanner in = new Scanner(System.in);
-        System.out.println("Input a directory path:");
-        String path = in.nextLine();
-        File dir = new File(path);
-        if (!dir.exists()) {
-            System.out.println("This directory does not exist: " + path);
-            return;
-        }
-        System.out.println("Input a file extension:");
-        String ext = "." + in.nextLine();
+     void findMostFreshFilesWithExtension() {
 
         File[] listFiles = dir.listFiles(new ExtFilenameFilter(ext));
         Map<String, Long> filesMap = new HashMap<>();
@@ -61,7 +61,7 @@ class Task1 {
 
     }
 
-    private static void outputTheMostFreshFiles(Map<String, Long> filesMap, long cur, long min) {
+    private void outputTheMostFreshFiles(Map<String, Long> filesMap, long cur, long min) {
         for (Map.Entry<String, Long> entry : filesMap.entrySet()) {
             long time = entry.getValue();
             if (cur - time <= min + SEC_DIFF) {
@@ -72,7 +72,7 @@ class Task1 {
         }
     }
 
-    private static long getMinAndFilesMap(File[] listFiles, Map<String, Long> filesMap, long cur, long min) {
+    private long getMinAndFilesMap(File[] listFiles, Map<String, Long> filesMap, long cur, long min) {
         BasicFileAttributes attr;
         for (File f : listFiles) {
             try {

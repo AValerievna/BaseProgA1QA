@@ -5,46 +5,29 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 class Task3 {
     private static final int DEF_NUM = 10;
     private static final String REGEXP_1 = "\\.([^.]+)$";
-    private static final String REGEXP_2 = "_res.$1";
+    private String regexp2;
 
-    static void cutRandomStringsFromOneFileToOther() {
-        Scanner in = new Scanner(System.in);
-        System.out.println("Input a file path:");
-        String path = in.nextLine();
-        System.out.println("Which version would you like to see? Choose the number");
-        System.out.println("  1)Only path");
-        System.out.println("  2)With number of string");
-        String res = null;
-        switch (in.nextInt()) {
-            case 1:
-                res = selectCases(path);
-                break;
-            case 2:
-                System.out.println("Input a number of strings:");
-                int num = in.nextInt();
-                if (num < 0) {
-                    System.out.println("Please, input natural number");
-                    break;
-                }
-                res = selectCases(path, num);
-                break;
-            default:
-                System.out.println("Please, choose the number from the list");
-                break;
-        }
-        System.out.println(res);
+    public Task3(String resEnd) {
+        regexp2 = resEnd + ".$1";
     }
 
-    private static String selectCases(String str, int num) {
+    public Task3() {
+        this("_res");
+    }
+
+    String selectCases(String str, int num) {
         Path path = Paths.get(str);
         File sourceFile = new File(str);
-        String resStr = str.replaceAll(REGEXP_1, REGEXP_2);
+        String resStr = str.replaceAll(REGEXP_1, regexp2);
         File resFile = new File(resStr);
         List<String> allLines = null;
         try {
@@ -80,7 +63,7 @@ class Task3 {
         return resStr;
     }
 
-    private static void writeListToFile(File sourceFile, ArrayList<String> lines) {
+    private void writeListToFile(File sourceFile, ArrayList<String> lines) {
         try (FileWriter fw = new FileWriter(sourceFile)) {
             for (String line : lines) {
                 fw.write(line + "\n");
@@ -90,7 +73,7 @@ class Task3 {
         }
     }
 
-    private static Set<Integer> generateRandomStringIndexes(int num, int linesCount) {
+    private Set<Integer> generateRandomStringIndexes(int num, int linesCount) {
         int numLimit;
         if (linesCount > num) {
             numLimit = num;
@@ -100,7 +83,7 @@ class Task3 {
         return new Random().ints(1, linesCount).distinct().limit(numLimit).boxed().collect(Collectors.toSet());
     }
 
-    private static String selectCases(String path) {
+    String selectCases(String path) {
         return selectCases(path, DEF_NUM);
     }
 }
