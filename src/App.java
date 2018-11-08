@@ -12,7 +12,7 @@ public class App {
             System.out.println("  3)Cut random strings from one file to other");
             System.out.println("  4)Exit");
 
-            switch (in.nextInt()) {
+            switch (Integer.parseInt(in.nextLine())) {
                 case 1:
                     doFindMostFreshFileOption(in);
                     break;
@@ -38,7 +38,7 @@ public class App {
         System.out.println("  1)yes");
         System.out.println("  2)no");
         Task3 task3;
-        switch (in.nextInt()) {
+        switch (Integer.parseInt(in.nextLine())) {
             case 1:
                 task3 = new Task3();
                 break;
@@ -55,13 +55,13 @@ public class App {
         System.out.println("  1)Only path");
         System.out.println("  2)With number of string");
         String res = null;
-        switch (in.nextInt()) {
+        switch (Integer.parseInt(in.nextLine())) {
             case 1:
                 res = task3.selectCases(path);
                 break;
             case 2:
                 System.out.println("Input a number of strings:");
-                int num = in.nextInt();
+                int num = Integer.parseInt(in.nextLine());
                 if (num < 0) {
                     System.out.println("Please, input natural number");
                     break;
@@ -81,7 +81,7 @@ public class App {
         System.out.println("  2)With collections");
         Task2 task2 = new Task2();
 
-        switch (in.nextInt()) {
+        switch (Integer.parseInt(in.nextLine())) {
             case 1:
                 task2.findArraysDifferenceWithoutCollections();
                 break;
@@ -97,6 +97,7 @@ public class App {
     private static void doFindMostFreshFileOption(Scanner in) {
         System.out.println("Input a directory path:");
         String path = in.nextLine();
+
         System.out.println("Input a file extension:");
         String ext = "." + in.nextLine();
         Task1 task1 = new Task1(path, ext);

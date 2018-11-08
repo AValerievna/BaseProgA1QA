@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,9 +33,8 @@ import java.util.List;
     }
 
      void findArraysDifferenceWithCollections() {
-        List<String> firstList = Arrays.asList(FIRST);
-        List<String> secondList = Arrays.asList(SECOND);
-
+        List<String> firstList = new ArrayList<>(Arrays.asList(FIRST));
+        List<String> secondList = new ArrayList<>(Arrays.asList(SECOND));
         firstList.removeAll(secondList);
         result = firstList.toArray(new String[firstList.size()]);
         arrayOutput(result);
