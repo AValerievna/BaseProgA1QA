@@ -12,21 +12,26 @@ public class App {
             System.out.println("  3)Cut random strings from one file to other");
             System.out.println("  4)Exit");
 
-            switch (Integer.parseInt(in.nextLine())) {
-                case 1:
-                    doFindMostFreshFileOption(in);
-                    break;
-                case 2:
-                    doFindArraysDiffOption(in);
-                    break;
-                case 3:
-                    doCutRandomStringsOption(in);
-                    break;
-                case 4:
-                    System.exit(0);
-                default:
-                    System.out.println("Please, choose the number from the list");
-                    break;
+            try {
+                switch (Integer.parseInt(in.nextLine())) {
+                    case 1:
+                        doFindMostFreshFileOption(in);
+                        break;
+                    case 2:
+                        doFindArraysDiffOption(in);
+                        break;
+                    case 3:
+                        doCutRandomStringsOption(in);
+                        break;
+                    case 4:
+                        System.exit(0);
+                    default:
+                        System.out.println("Please, choose the number from the list");
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Incorrect input");
+                e.printStackTrace();
             }
         }
     }
